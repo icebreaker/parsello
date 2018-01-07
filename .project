@@ -1,0 +1,14 @@
+execute:
+	build/tests || exit 0
+
+build:
+	make -C build
+
+generate:
+	premake4 clean
+	premake4 gmake
+
+clean:
+	premake4 clean
+
+.PHONY: execute build generate clean
