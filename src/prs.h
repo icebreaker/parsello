@@ -480,3 +480,5 @@ PRS_API const char *prs_token_type_to_str(const prs_token_t *token)
 #endif
 
 #endif
+
+/* vim: set ts=4 sw=4 sts=4 noet: */
