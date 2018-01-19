@@ -1,6 +1,7 @@
 #include <string.h>
 
 #define TESTA_REPORT_ASSERTS
+#define TESTA_VIM_ASSERT
 #include <tests/testa.h>
 
 #define PRS_IMPLEMENTATION
@@ -487,6 +488,144 @@ static int parse_expect(void)
 	return 0;
 }
 
+static int unparse(void)
+{
+	prs_context_t ctx;
+	prs_token_t token, token2;
+	const char *s = "char *str = \"\";";
+
+	prs_init(&ctx, s);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token));
+	TESTA_ASSERT(token.s != NULL);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_IDENTIFIER);
+	TESTA_ASSERT(token.len == 4);
+	TESTA_ASSERT(token.line == 1);
+
+	TESTA_ASSERT(prs_unparse(&ctx, &token));
+
+	TESTA_ASSERT(prs_parse(&ctx, &token2));
+	TESTA_ASSERT(token2.s != NULL);
+	TESTA_ASSERT(token2.type == PRS_TOKEN_TYPE_IDENTIFIER);
+	TESTA_ASSERT(token2.len == 4);
+	TESTA_ASSERT(token2.line == 1);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token));
+	TESTA_ASSERT(token.s != NULL);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token.len == 1);
+	TESTA_ASSERT(token.line == 1);
+
+	TESTA_ASSERT(prs_unparse(&ctx, &token));
+
+	TESTA_ASSERT(prs_parse(&ctx, &token2));
+	TESTA_ASSERT(token2.s != NULL);
+	TESTA_ASSERT(token2.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token2.len == 1);
+	TESTA_ASSERT(token2.line == 1);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token));
+	TESTA_ASSERT(token.s != NULL);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_IDENTIFIER);
+	TESTA_ASSERT(token.len == 3);
+	TESTA_ASSERT(token.line == 1);
+
+	TESTA_ASSERT(prs_unparse(&ctx, &token));
+
+	TESTA_ASSERT(prs_parse(&ctx, &token2));
+	TESTA_ASSERT(token2.s != NULL);
+	TESTA_ASSERT(token2.type == PRS_TOKEN_TYPE_IDENTIFIER);
+	TESTA_ASSERT(token2.len == 3);
+	TESTA_ASSERT(token2.line == 1);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token));
+	TESTA_ASSERT(token.s != NULL);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token.len == 1);
+	TESTA_ASSERT(token.line == 1);
+
+	TESTA_ASSERT(prs_unparse(&ctx, &token));
+
+	TESTA_ASSERT(prs_parse(&ctx, &token2));
+	TESTA_ASSERT(token2.s != NULL);
+	TESTA_ASSERT(token2.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token2.len == 1);
+	TESTA_ASSERT(token2.line == 1);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token));
+	TESTA_ASSERT(token.s != NULL);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_STRING);
+	TESTA_ASSERT(token.len == 0);
+	TESTA_ASSERT(token.line == 1);
+
+	TESTA_ASSERT(prs_unparse(&ctx, &token));
+
+	TESTA_ASSERT(prs_parse(&ctx, &token2));
+	TESTA_ASSERT(token2.s != NULL);
+	TESTA_ASSERT(token2.type == PRS_TOKEN_TYPE_STRING);
+	TESTA_ASSERT(token2.len == 0);
+	TESTA_ASSERT(token2.line == 1);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token));
+	TESTA_ASSERT(token.s != NULL);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token.len == 1);
+	TESTA_ASSERT(token.line == 1);
+
+	TESTA_ASSERT(prs_unparse(&ctx, &token));
+
+	TESTA_ASSERT(prs_parse(&ctx, &token2));
+	TESTA_ASSERT(token2.s != NULL);
+	TESTA_ASSERT(token2.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token2.len == 1);
+	TESTA_ASSERT(token2.line == 1);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token) == 0);
+	TESTA_ASSERT(token.s == NULL);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_INVALID);
+	TESTA_ASSERT(token.len == 0);
+	TESTA_ASSERT(token.line == 0);
+
+	TESTA_ASSERT(prs_unparse(&ctx, &token) == 0);
+
+	TESTA_ASSERT(*ctx.s == PRS_EOS);
+	TESTA_ASSERT(ctx.line == 1);
+
+	prs_init(&ctx, s);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token));
+	TESTA_ASSERT(token.s != NULL);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_IDENTIFIER);
+	TESTA_ASSERT(token.len == 4);
+	TESTA_ASSERT(token.line == 1);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token2));
+	TESTA_ASSERT(token2.s != NULL);
+	TESTA_ASSERT(token2.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token2.len == 1);
+	TESTA_ASSERT(token2.line == 1);
+
+	TESTA_ASSERT(prs_unparse(&ctx, &token2));
+	TESTA_ASSERT(prs_unparse(&ctx, &token));
+
+	TESTA_ASSERT(prs_parse(&ctx, &token2));
+	TESTA_ASSERT(token2.s != NULL);
+	TESTA_ASSERT(token2.type == PRS_TOKEN_TYPE_IDENTIFIER);
+	TESTA_ASSERT(token2.len == 4);
+	TESTA_ASSERT(token2.line == 1);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token));
+	TESTA_ASSERT(token.s != NULL);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token.len == 1);
+	TESTA_ASSERT(token.line == 1);
+
+	TESTA_ASSERT(*ctx.s != PRS_EOS);
+	TESTA_ASSERT(ctx.line == 1);
+
+	return 0;
+}
+
 static int token_compare(void)
 {
 	prs_context_t ctx;
@@ -831,6 +970,7 @@ TESTA_SUITE_BEGIN
 		TESTA_TEST(init)
 		TESTA_TEST(parse)
 		TESTA_TEST(parse_expect)
+		TESTA_TEST(unparse)
 		TESTA_TEST(token_compare)
 		TESTA_TEST(token_copy)
 		TESTA_TEST(token_type_to_str)

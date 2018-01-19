@@ -101,6 +101,7 @@ typedef struct
 PRS_API void prs_init(prs_context_t *ctx, const prs_char_t *s);
 PRS_API int prs_parse(prs_context_t *ctx, prs_token_t *token);
 PRS_API int prs_parse_expect(prs_context_t *ctx, prs_token_t *token, const prs_char_t *s);
+PRS_API int prs_unparse(prs_context_t *ctx, prs_token_t *token);
 PRS_API int prs_token_compare(const prs_token_t *token, const prs_char_t *s);
 PRS_API prs_uint_t prs_token_copy(const prs_token_t *token, prs_char_t *s, const prs_uint_t num);
 PRS_API const char *prs_token_type_to_str(const prs_token_t *token);
@@ -384,6 +385,17 @@ PRS_API int prs_parse_expect(prs_context_t *ctx, prs_token_t *token, const prs_c
 		return prs_token_compare(token, s);
 
 	return ret;
+}
+
+PRS_API int prs_unparse(prs_context_t *ctx, prs_token_t *token)
+{
+	if(token->type == PRS_TOKEN_TYPE_INVALID || token->s == NULL || token->line < 1)
+		return 0;
+
+	ctx->s = (prs_char_t *) ((token->type == PRS_TOKEN_TYPE_STRING) ? token->s - 1 : token->s);
+	ctx->line = token->line;
+
+	return 1;
 }
 
 PRS_API int prs_token_compare(const prs_token_t *token, const prs_char_t *s)

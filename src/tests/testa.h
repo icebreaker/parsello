@@ -34,7 +34,7 @@
 #endif
 
 #ifndef TESTA_VERSION
-	#define TESTA_VERSION 0x102
+	#define TESTA_VERSION 0x103
 #endif
 
 #if defined(_WIN32) || defined(TESTA_COLORLESS)
@@ -122,9 +122,15 @@
 #endif
 
 #ifndef TESTA_PRINT_ASSERT
-	#define TESTA_PRINT_ASSERT(x) \
-		TESTA_PRINTF(TESTA_COLOR_RED " [FAILED] " TESTA_COLOR_CYAN "%s:%d %s\n" TESTA_COLOR_END, \
-					 TESTA_FILENAME, TESTA_LINE, #x)
+	#ifdef TESTA_VIM_ASSERT
+		#define TESTA_PRINT_ASSERT(x) \
+			TESTA_PRINTF(TESTA_COLOR_RED " [FAILED] " TESTA_COLOR_CYAN "\n%s:%d:1: %s\n" TESTA_COLOR_END, \
+						TESTA_FILENAME, TESTA_LINE, #x)
+	#else
+		#define TESTA_PRINT_ASSERT(x) \
+			TESTA_PRINTF(TESTA_COLOR_RED " [FAILED] " TESTA_COLOR_CYAN "%s:%d %s\n" TESTA_COLOR_END, \
+						TESTA_FILENAME, TESTA_LINE, #x)
+	#endif
 #endif
 
 #ifndef TESTA_PRINT_SUCCESS
@@ -178,7 +184,6 @@
 		TESTA_UNUSED(failure); \
 		TESTA_UNUSED(skips); \
 		TESTA_UNUSED(indent); \
-		TESTA_UNUSED(started); \
 		TESTA_PRINT_WELCOME(argc, argv); \
 		started = TESTA_TIME(); \
 		{
