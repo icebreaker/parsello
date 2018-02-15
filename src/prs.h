@@ -33,7 +33,7 @@
 #endif
 
 #ifndef PRS_VERSION
-	#define PRS_VERSION 0x100
+	#define PRS_VERSION 0x101
 #endif
 
 #ifndef PRS_UINT_TYPE
@@ -187,6 +187,12 @@ PRS_API const char *prs_token_type_to_str(const prs_token_t *token);
 	#define prs_ispreprocessor(c) (c == '#')
 #endif
 
+#ifdef PRS_PARSE_MULTILINE_STRING
+	#ifndef prs_ismultiline_string
+		#define prs_ismultiline_string(c0, c1, c2) (c0 == '"' && c1 == '"' && c2 == '"')
+	#endif
+#endif
+
 PRS_API void prs_init(prs_context_t *ctx, const prs_char_t *s)
 {
 	ctx->s = (prs_char_t *) s;
@@ -332,6 +338,41 @@ PRS_API int prs_parse(prs_context_t *ctx, prs_token_t *token)
 		token->type = PRS_TOKEN_TYPE_IDENTIFIER;
 		token->len = len;
 	}
+#ifdef PRS_PARSE_MULTILINE_STRING
+	else if(prs_ismultiline_string(*s, *(s + 1), *(s + 2)))
+	{
+		s++;
+		s++;
+		s++;
+
+		while(!prs_iseos(*s) && !prs_ismultiline_string(*s, *(s + 1), *(s + 2)))
+		{
+			if(prs_isnewline(*s))
+			{
+				line++;
+			}
+			else if(prs_isescape(*s) && prs_isstring(*(s + 1)))
+			{
+				len++;
+				s++;
+			}
+
+			len++;
+			s++;
+		}
+
+		token->type = PRS_TOKEN_TYPE_STRING;
+		token->len = len;
+		token->s = s - len;
+
+		if(!prs_ismultiline_string(*s, *(s + 1), *(s + 2)))
+			return 0;
+
+		s++;
+		s++;
+		s++;
+	}
+#endif
 	else if(prs_isstring(*s))
 	{
 		prs_char_t c = *s;

@@ -5,6 +5,7 @@
 #include <tests/testa.h>
 
 #define PRS_IMPLEMENTATION
+#define PRS_PARSE_MULTILINE_STRING
 #include <prs.h>
 
 static int init(void)
@@ -833,6 +834,58 @@ static int utf8(void)
 	return 0;
 }
 
+static int multiline(void)
+{
+	prs_context_t ctx;
+	prs_token_t token;
+
+	const char *s =
+	"{\n"
+	"\tconfig\t=\t\t\t\"\"\"hello\n"
+	"\t\tw\\\"orld'\n"
+	"\naweso\"m\\\'e\t\t\n"
+	"\"\"\"\n\t"
+	"}\n\n\n";
+
+	prs_init(&ctx, s);
+
+	TESTA_ASSERT(prs_parse_expect(&ctx, &token, "{"));
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token.len == 1);
+	TESTA_ASSERT(token.line == 1);
+
+	TESTA_ASSERT(prs_parse_expect(&ctx, &token, "config"));
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_IDENTIFIER);
+	TESTA_ASSERT(token.len == 6);
+	TESTA_ASSERT(token.line == 2);
+
+	TESTA_ASSERT(prs_parse_expect(&ctx, &token, "="));
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token.len == 1);
+	TESTA_ASSERT(token.line == 2);
+
+	TESTA_ASSERT(prs_parse_expect(&ctx, &token, "hello\n\t\tw\"orld'\n\naweso\"m'e\t\t\n"));
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_STRING);
+	TESTA_ASSERT(token.len == 31);
+	TESTA_ASSERT(token.line == 2);
+
+	TESTA_ASSERT(prs_parse_expect(&ctx, &token, "}"));
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
+	TESTA_ASSERT(token.len == 1);
+	TESTA_ASSERT(token.line == 7);
+
+	TESTA_ASSERT(prs_parse(&ctx, &token) == 0);
+	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_INVALID);
+	TESTA_ASSERT(token.len == 0);
+	TESTA_ASSERT(token.line == 0);
+	TESTA_ASSERT(token.s == NULL);
+
+	TESTA_ASSERT(*ctx.s == PRS_EOS);
+	TESTA_ASSERT(ctx.line == 10);
+
+	return 0;
+}
+
 static int json(void)
 {
 	prs_context_t ctx;
@@ -979,6 +1032,7 @@ TESTA_SUITE_BEGIN
 		TESTA_TEST(utf8)
 	TESTA_GROUP_END
 	TESTA_GROUP_BEGIN("parse")
+		TESTA_TEST(multiline)
 		TESTA_TEST(json)
 	TESTA_GROUP_END
 TESTA_SUITE_END
