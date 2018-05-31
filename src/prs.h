@@ -90,6 +90,7 @@ typedef struct
 	prs_uint_t len;
 	prs_uint_t line;
 	const prs_char_t *s;
+	prs_char_t c;
 } prs_token_t;
 
 typedef struct
@@ -209,6 +210,7 @@ PRS_API int prs_parse(prs_context_t *ctx, prs_token_t *token)
 	line = ctx->line;
 
 	token->s = NULL;
+	token->c = 0;
 	token->type = PRS_TOKEN_TYPE_INVALID;
 	token->len = 0;
 	token->line = 0;
@@ -283,6 +285,7 @@ PRS_API int prs_parse(prs_context_t *ctx, prs_token_t *token)
 
 	token->line = line;
 	token->s = s;
+	token->c = *s;
 
 	if(prs_isdigit(*s) || (prs_isdigitsign(*s) && prs_isdigit(*(s + 1))))
 	{

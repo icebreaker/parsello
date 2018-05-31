@@ -42,54 +42,63 @@ static int parse(void)
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_IDENTIFIER);
 	TESTA_ASSERT(token.len == 4);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == 'c');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
 	TESTA_ASSERT(token.s != NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
 	TESTA_ASSERT(token.len == 1);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == '*');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
 	TESTA_ASSERT(token.s != NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_IDENTIFIER);
 	TESTA_ASSERT(token.len == 4);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == 'm');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
 	TESTA_ASSERT(token.s != NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
 	TESTA_ASSERT(token.len == 1);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == '(');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
 	TESTA_ASSERT(token.s != NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_IDENTIFIER);
 	TESTA_ASSERT(token.len == 4);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == 'v');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
 	TESTA_ASSERT(token.s != NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
 	TESTA_ASSERT(token.len == 1);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == ')');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
 	TESTA_ASSERT(token.s != NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
 	TESTA_ASSERT(token.len == 1);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == '{');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
 	TESTA_ASSERT(token.s != NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_IDENTIFIER);
 	TESTA_ASSERT(token.len == 6);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == 'r');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
 	TESTA_ASSERT(token.s != NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_STRING);
 	TESTA_ASSERT(token.len == 0);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == '"');
 	TESTA_ASSERT(prs_token_compare(&token, ""));
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
@@ -97,18 +106,21 @@ static int parse(void)
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
 	TESTA_ASSERT(token.len == 1);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == ';');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token));
 	TESTA_ASSERT(token.s != NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
 	TESTA_ASSERT(token.len == 1);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == '}');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token) == 0);
 	TESTA_ASSERT(token.s == NULL);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_INVALID);
 	TESTA_ASSERT(token.len == 0);
 	TESTA_ASSERT(token.line == 0);
+	TESTA_ASSERT(token.c == 0);
 
 	TESTA_ASSERT(*ctx.s == PRS_EOS);
 	TESTA_ASSERT(ctx.line == 1);
@@ -853,32 +865,38 @@ static int multiline(void)
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
 	TESTA_ASSERT(token.len == 1);
 	TESTA_ASSERT(token.line == 1);
+	TESTA_ASSERT(token.c == '{');
 
 	TESTA_ASSERT(prs_parse_expect(&ctx, &token, "config"));
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_IDENTIFIER);
 	TESTA_ASSERT(token.len == 6);
 	TESTA_ASSERT(token.line == 2);
+	TESTA_ASSERT(token.c == 'c');
 
 	TESTA_ASSERT(prs_parse_expect(&ctx, &token, "="));
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
 	TESTA_ASSERT(token.len == 1);
 	TESTA_ASSERT(token.line == 2);
+	TESTA_ASSERT(token.c == '=');
 
 	TESTA_ASSERT(prs_parse_expect(&ctx, &token, "hello\n\t\tw\"orld'\n\naweso\"m'e\t\t\n"));
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_STRING);
 	TESTA_ASSERT(token.len == 31);
 	TESTA_ASSERT(token.line == 2);
+	TESTA_ASSERT(token.c == '"');
 
 	TESTA_ASSERT(prs_parse_expect(&ctx, &token, "}"));
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_SYMBOL);
 	TESTA_ASSERT(token.len == 1);
 	TESTA_ASSERT(token.line == 7);
+	TESTA_ASSERT(token.c == '}');
 
 	TESTA_ASSERT(prs_parse(&ctx, &token) == 0);
 	TESTA_ASSERT(token.type == PRS_TOKEN_TYPE_INVALID);
 	TESTA_ASSERT(token.len == 0);
 	TESTA_ASSERT(token.line == 0);
 	TESTA_ASSERT(token.s == NULL);
+	TESTA_ASSERT(token.c == 0);
 
 	TESTA_ASSERT(*ctx.s == PRS_EOS);
 	TESTA_ASSERT(ctx.line == 10);
