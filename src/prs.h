@@ -44,6 +44,10 @@
 	#define PRS_CHAR_TYPE char
 #endif
 
+#ifndef PRS_L
+	#define PRS_L(s) s
+#endif
+
 #ifndef PRS_UNUSED
 	#define PRS_UNUSED(x) (void)(x)
 #endif
@@ -60,16 +64,16 @@
 	#define PRS_EOL '\n'
 #endif
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
 #ifndef PRS_API
 	#ifdef PRS_STATIC
 		#define PRS_API static
 	#else
 		#define PRS_API
 	#endif
+#endif
+
+#ifdef __cplusplus
+extern "C" {
 #endif
 
 typedef PRS_UINT_TYPE prs_uint_t;
@@ -105,7 +109,7 @@ PRS_API int prs_parse_expect(prs_context_t *ctx, prs_token_t *token, const prs_c
 PRS_API int prs_unparse(prs_context_t *ctx, prs_token_t *token);
 PRS_API int prs_token_compare(const prs_token_t *token, const prs_char_t *s);
 PRS_API prs_uint_t prs_token_copy(const prs_token_t *token, prs_char_t *s, const prs_uint_t num);
-PRS_API const char *prs_token_type_to_str(const prs_token_t *token);
+PRS_API const prs_char_t *prs_token_type_to_str(const prs_token_t *token);
 
 #ifdef __cplusplus
 }
@@ -496,27 +500,27 @@ PRS_API prs_uint_t prs_token_copy(const prs_token_t *token, prs_char_t *s, const
 	return i;
 }
 
-PRS_API const char *prs_token_type_to_str(const prs_token_t *token)
+PRS_API const prs_char_t *prs_token_type_to_str(const prs_token_t *token)
 {
 	switch(token->type)
 	{
 		case PRS_TOKEN_TYPE_INVALID:
-			return "invalid";
+			return PRS_L("invalid");
 
 		case PRS_TOKEN_TYPE_SYMBOL:
-			return "symbol";
+			return PRS_L("symbol");
 
 		case PRS_TOKEN_TYPE_IDENTIFIER:
-			return "identifier";
+			return PRS_L("identifier");
 
 		case PRS_TOKEN_TYPE_NUMBER:
-			return "number";
+			return PRS_L("number");
 
 		case PRS_TOKEN_TYPE_STRING:
-			return "string";
+			return PRS_L("string");
 	}
 
-	return "unknown";
+	return PRS_L("unknown");
 }
 
 #ifdef __GNUC__
