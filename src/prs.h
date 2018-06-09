@@ -33,7 +33,7 @@
 #endif
 
 #ifndef PRS_VERSION
-	#define PRS_VERSION 0x101
+	#define PRS_VERSION 0x102
 #endif
 
 #ifndef PRS_UINT_TYPE
