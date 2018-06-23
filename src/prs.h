@@ -33,7 +33,7 @@
 #endif
 
 #ifndef PRS_VERSION
-	#define PRS_VERSION 0x102
+	#define PRS_VERSION 0x103
 #endif
 
 #ifndef PRS_UINT_TYPE
@@ -42,26 +42,6 @@
 
 #ifndef PRS_CHAR_TYPE
 	#define PRS_CHAR_TYPE char
-#endif
-
-#ifndef PRS_L
-	#define PRS_L(s) s
-#endif
-
-#ifndef PRS_UNUSED
-	#define PRS_UNUSED(x) (void)(x)
-#endif
-
-#ifndef PRS_ARRAY_SIZE
-	#define PRS_ARRAY_SIZE(a) (sizeof((a)) / sizeof((a)[0]))
-#endif
-
-#ifndef PRS_EOS
-	#define PRS_EOS '\0'
-#endif
-
-#ifndef PRS_EOL
-	#define PRS_EOL '\n'
 #endif
 
 #ifndef PRS_API
@@ -122,6 +102,22 @@ PRS_API const prs_char_t *prs_token_type_to_str(const prs_token_t *token);
 #ifdef __GNUC__
 	#pragma GCC diagnostic push
 	#pragma GCC diagnostic ignored "-Wunused-function"
+#endif
+
+#ifndef PRS_L
+	#define PRS_L(s) s
+#endif
+
+#ifndef PRS_ARRAY_SIZE
+	#define PRS_ARRAY_SIZE(a) (sizeof((a)) / sizeof((a)[0]))
+#endif
+
+#ifndef PRS_EOS
+	#define PRS_EOS '\0'
+#endif
+
+#ifndef PRS_EOL
+	#define PRS_EOL '\n'
 #endif
 
 #ifndef prs_isspace
