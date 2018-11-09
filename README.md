@@ -55,7 +55,7 @@ config {
 }
 ```
 
-And the now the code that can be used to parse it.
+And now the code that can be used to parse it.
 
 ```c
 #include <stdio.h>
