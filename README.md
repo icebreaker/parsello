@@ -184,6 +184,8 @@ $ make -C build
 $ build/tests
 ```
 
+![Tests](src/tests/tests.png)
+
 The tests reside in the `src/tests/tests.c` file.
 
 Contribute
