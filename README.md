@@ -38,7 +38,7 @@ const char *s = "...";
 prs_context_t ctx;
 prs_token_t token;
 
-rs_init(&ctx, s);
+prs_init(&ctx, s);
 
 while(prs_parse(&ctx, &token))
    printf("'%.*s' on line %d\n", token->len, token->s, token->line);
